@@ -79,6 +79,9 @@ env/
  # dotenv
  .env
 
+ # csv ファイルは要らない
+*.csv
+
  # virtualenv
  venv/
  ENV/
