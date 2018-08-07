@@ -26,7 +26,7 @@
 
  <div class="container">
     <h2>ChatApp</h2>
-    <div id="chart_area" class="chat_area row col-md-12">
+    <div id="chat_area" class="chat_area row col-md-12">
         % for talk in talk_list:
             <div class="row">
             % if talk["username"] == username:
@@ -49,13 +49,23 @@
               {{ username }}
               <input type="text" name="chat" />
               <input type="submit" value="送信" />
+              <input type="button" value="戻る" onclick="back()"/>
           </form>
       </div>
   </div>
 
  <script>
       // 最下部へのスクロール
-     $('#chart_area').animate({scrollTop: $('#chart_area')[0].scrollHeight}, 0);
+     $('#chat_area').animate({scrollTop: $('#chat_area')[0].scrollHeight}, 0);
+     // 戻るボタンを押したら/talkではなく、/に移動させたい
+     function back() {
+           var url = location.href;
+           var index_url = url.replace('chat_room', '');
+           location.href = index_url
+           ;
+           console.log("urlは" + index_url + "です。");
+           }
+
   </script>
 
  </body>

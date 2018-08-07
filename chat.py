@@ -8,6 +8,7 @@ from bottle import route, run, template, request, response, redirect
 
 @route("/")
 def index():
+    username = 0
     return template("index")
 
 
@@ -25,6 +26,7 @@ def enter():
     response.set_cookie("username", username)
     return redirect("/chat_room")
 
+
 @route("/chat_room")
 def chat_room():
     """
@@ -36,10 +38,10 @@ def chat_room():
     # cookieにユーザ情報がない場合は入室画面へ戻す
     if not username:
         return redirect("/")
-
     # 永続化してあるこれまでのチャット履歴を取得
     talk_list = get_talk()
     return template("chat_room", username=username, talk_list=talk_list)
+
 
 @route("/talk", method=["POST"])
 def talk():
@@ -65,7 +67,6 @@ def talk():
     # 発言保存
     save_talk(talk_time, username, chat_data, new_data)
 
-
     return redirect("/chat_room")
 
 
@@ -85,6 +86,7 @@ def save_talk(talk_time, username, chat_data, new_data):
         writer.writerow([talk_time, username, chat_data])
         if new_data != "null":
             writer.writerow([talk_time, "bot", new_data])
+
 
 def get_talk():
     """
