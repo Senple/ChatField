@@ -5,10 +5,8 @@ from datetime import datetime
 from bottle import route, run, template, request, response, redirect
 
 
-
 @route("/")
 def index():
-    username = 0
     return template("index")
 
 
@@ -42,52 +40,6 @@ def chat_room():
     talk_list = get_talk()
     return template("chat_room", username=username, talk_list=talk_list)
 
-
-@route("/talk", method=["POST"])
-def talk():
-
-    """
-    発言を登録し、チャットルームへリダイレクトします
-    :return:
-    """
-
-    # マルチバイトデータのためgetではなくgetunicodeにする
-    chat_data = request.POST.getunicode("chat")
-    # 発言者をcookieから取得
-    username = request.get_cookie("username")
-    # 発言時間取得
-    talk_time = datetime.now()
-
-    if chat_data == "削除":
-        new_data = "やめてくりー"
-    elif chat_data == "こんにちは":
-        new_data = 'こんにちは、{}さん'.format(username)
-    else:
-        new_data = "その言葉はまだわかんないんだ！ ごめんねm(__)m"
-    # 発言保存
-    save_talk(talk_time, username, chat_data, new_data)
-
-    return redirect("/chat_room")
-
-
-def save_talk(talk_time, username, chat_data, new_data):
-    """
-    チャットデータを永続化する関数
-    CSVとしてチャットの内容を書き込んでいる
-
-    :param username:
-    :param chat_data:
-    :param talk_time:
-    :return:
-    """
-
-    with open('./chat_data.csv', 'a') as f:
-        writer = csv.writer(f, lineterminator='\n')
-        writer.writerow([talk_time, username, chat_data])
-        if new_data != "null":
-            writer.writerow([talk_time, "bot", new_data])
-
-
 def get_talk():
     """
     永続化されたチャットデータを取得する関数
@@ -108,12 +60,73 @@ def get_talk():
                 "username": row[1],
                 "chat_data": row[2],
                 })
-    # print(talk_list[-1])
     if talk_list[-1]["chat_data"] == "Hi":
         print("OK")
     elif talk_list[-1]["chat_data"] == "おはよう":
         print("NOOOOO")
     return talk_list
+
+
+@route("/talk", method=["POST"])
+def talk():
+
+    """
+    発言を登録し、チャットルームへリダイレクトします
+    :return:
+    """
+
+    # マルチバイトデータのためgetではなくgetunicodeにする
+    chat_data = request.POST.getunicode("chat")
+    # 発言者をcookieから取得
+    username = request.get_cookie("username")
+    # 発言時間取得
+    talk_time = datetime.now()
+    greeting_list = ["おはよう","こんにちは","こんにちわ","Hi","hi","こんばんは","こんばんわ"]
+
+    if chat_data in greeting_list:
+        greeting = greet()
+        new_data =  greeting + '、{}さん'.format(username)
+    elif chat_data == "削除":
+        new_data = "やめてくりー"
+    else:
+        new_data = "その言葉はまだわかんないんだ！ ごめんねm(__)m"
+    # 発言保存
+    save_talk(talk_time, username, chat_data, new_data)
+
+    return redirect("/chat_room")
+
+def greet():
+    now = datetime.now()
+    greet_list = ["もしかして…夜明け待ちですか","おはよう","こんにちは","こんばんは","夜更かしはだめですよ~"]
+    time = now.hour
+    if time <= 5 and time > 3:
+        return greet_list[0]
+    elif time <=  9 and time >5:
+        return greet_list[1]
+    elif time <= 17 and time > 9:
+        return greet_list[2]
+    elif time <=20 and time > 17:
+        return greet_list[3]
+    else:
+        return greet_list[4]
+
+def save_talk(talk_time, username, chat_data, new_data):
+    """
+    チャットデータを永続化する関数
+    CSVとしてチャットの内容を書き込んでいる
+
+    :param username:
+    :param chat_data:
+    :param talk_time:
+    :return:
+    """
+
+    with open('./chat_data.csv', 'a') as f:
+        writer = csv.writer(f, lineterminator='\n')
+        writer.writerow([talk_time, username, chat_data])
+        if new_data != "null":
+            writer.writerow([talk_time, "bot", new_data])
+
 
 # サーバの起動
 run(host='localhost', port=8080, debug=True, reloader=True)
