@@ -2,12 +2,16 @@
 import csv
 import os
 from datetime import datetime
-from bottle import route, run, template, request, response, redirect
+from bottle import route, run, template, request, response, redirect, static_file
 
 
 @route("/")
 def index():
     return template("index")
+
+# @route("/static/<filepath:re:.*\.css>")
+# def css(filepath):
+#     return static_file(filepath, root="static")
 
 
 @route("/enter", method=["POST"])

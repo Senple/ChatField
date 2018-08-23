@@ -3,7 +3,17 @@
  <head>
      <meta charset="UTF-8">
      <title>チャットルーム</title>
-     % include("library.html")
+     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+      <!-- Latest compiled and minified CSS -->
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+      <!-- Optional theme -->
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+      <!-- Latest compiled and minified JavaScript -->
+     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+
+
      <style>
          .chat_area {
              overflow:auto;
@@ -16,11 +26,12 @@
          }
      </style>
  </head>
+
  <body>
-
-
+  <div class="title">
+      <h2>ChatApp</h2>
+    </div>
  <div class="container">
-    <h2>ChatApp</h2>
     <div id="chat_area" class="chat_area row col-md-12">
         % for talk in talk_list:
             <div class="row">
@@ -46,10 +57,20 @@
               <input type="submit" value="送信" />
               <input type="button" value="戻る" onclick="back()"/>
           </form>
-          <div class="delete-func" style="width:500px; padding: 100px; margin-bottom: 10px; border: 1px solid #333333; z-index:3; position: relative; top: -50px; ">
-            <button type="button" style="margin-left: auto;">消える</button>
-            <button type="button" style="margin-left: auto;">大きくする</button>
-            <button type="button" style="margin-left: auto;">見えなくする</button>
+          <!-- <p><i class="fa fa-flag fa-lg"></i> fa-flag（fd-lg）</p> -->
+          <!-- <p><i class="fas fa-car-crash"></i> これは車です</p> -->
+          <!-- display: table-cell;
+          z-index: 20000;
+          position: fixed;
+          bottom: 0px;
+          right: 0;
+          width: 360px;
+          height: 500px; -->
+          <div class="delete-func" style="width:300px; height: 28px; border: 1px solid #333333; z-index:3; position: relative;">
+            <button type="button" style="float: right;"><i class="fas fa-times"></i></button> <!-- 消える -->
+            <button type="button" style="float: right;"><i class="far fa-clone"></i></button> <!-- 大きくする -->
+            <button type="button" style="float: right;"><i class="fas fa-minus"></i></button> <!-- 見えなくする -->
+
           </div>
       </div>
   </div>
