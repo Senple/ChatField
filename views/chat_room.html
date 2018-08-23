@@ -12,13 +12,8 @@
              height:500px;
              vertical-align:bottom;
              background-color: #DDDDDD;
+             z-index : 1;
          }
-         /* .pull-left{
-           float: left;
-         }
-         .pull-right{
-           float: right;
-         } */
      </style>
  </head>
  <body>
@@ -51,6 +46,11 @@
               <input type="submit" value="送信" />
               <input type="button" value="戻る" onclick="back()"/>
           </form>
+          <div class="delete-func" style="width:500px; padding: 100px; margin-bottom: 10px; border: 1px solid #333333; z-index:3; position: relative; top: -50px; ">
+            <button type="button" style="margin-left: auto;">消える</button>
+            <button type="button" style="margin-left: auto;">大きくする</button>
+            <button type="button" style="margin-left: auto;">見えなくする</button>
+          </div>
       </div>
   </div>
 

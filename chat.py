@@ -47,7 +47,6 @@ def get_talk():
     :return:
     """
     talk_list = []
-
     # 履歴ファイルがない場合は空ファイルを作成する
     if not os.path.exists("./chat_data.csv"):
         open("./chat_data.csv", "w").close()
