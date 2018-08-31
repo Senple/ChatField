@@ -80,6 +80,7 @@ def talk():
 
     # マルチバイトデータのためgetではなくgetunicodeにする
     chat_data = request.POST.getunicode("chat")
+    print(chat_data)
     # 発言者をcookieから取得
     username = request.get_cookie("username")
     # 発言時間取得

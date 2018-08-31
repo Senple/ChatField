@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+     <meta charset="UTF-8">
+     <title>チャットルーム</title>
+     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+      <!-- Latest compiled and minified CSS -->
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+      <!-- Optional theme -->
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+      <!-- Latest compiled and minified JavaScript -->
+     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous">
+     </script>
+
+   </head>
+
+ <body>
+    <div id="Hidden-mode" style="width:200px; height:200px; z-index:10;" draggable="true" >
+        <i class="fas fa-user-alt fa-10x" style="cursor: pointer;" onclick="hyouji1(0)"></i>
+        <p class="arrow_box" >こまっているなら相談乗るよ！</p>
+       <style type="text/css">
+
+        .arrow_box {
+         display: none;
+         position: absolute;
+         padding: 16px;
+         -webkit-border-radius: 8px;
+         -moz-border-radius: 8px;
+         border-radius: 8px;
+         background: #333;
+         color: #fff;
+         }
+
+        .arrow_box:after {
+         position: absolute;
+         bottom: 100%;
+         left: 50%;
+         width: 0;
+         height: 0;
+         margin-left: -10px;
+         border: solid transparent;
+         border-color: rgba(51, 51, 51, 0);
+         border-bottom-color: #333;
+         border-width: 10px;
+         pointer-events: none;
+         content: " ";
+         }
+
+        i:hover + p.arrow_box {
+         display : block;
+         }
+
+        </style>
+      </div>
+
+    <div id="display-mode" style="width:360px; height: 500px; border: 1px solid #333333; z-index:10; position: absolute;">
+        <div id="header" style="height:124px; width:100%;">
+           <h2 class="title-word" style="width:70%; display:inline-block;text-align: center;font-size: 245%;">ChatBot</h2>
+           <h2 class="minus-close-button" style="display: inline-block;width: 30%; float: right; text-align: center;font-size: 245%;"><i class="fas fa-minus" style="cursor: pointer;" onclick="hyouji1(1)"></i></h2>
+         </div>
+
+        <div id="main" style="background-color:gray; height:350px; z-index:150;">
+           <div id="chat_area" class="chat_area row col-md-12" style="overflow:auto; border:solid; width:374px; height:350px; vertical-align:bottom; background-color: #DDDDDD; z-index :1 ;">
+               % for talk in talk_list:
+                   <div class="row">
+                   % if talk["username"] == "user":
+                       <div class="talk alert alert-info pull-right" title='{{ talk["talk_time"] }}'>
+                         {{ talk["username"] }}:{{ talk["content"] }}</div>
+                   % else:
+                       % if talk["username"] == "bot":
+                           <div class="talk alert alert-success pull-left" title='{{ talk["talk_time"] }}'>
+                           {{ talk["username"] }}:{{ talk["content"] }}</div>
+                       % else:
+                           <div class="talk alert alert-success none" style="display: none;">
+                           {{ talk["username"] }}:{{ talk["content"] }}</div>
+                       % end
+                   % end
+                   </div>
+               % end
+            </div>
+         </div>
+        <div id="footer" class="row col-md-12" style="height:24px;">
+           <form method="POST" action="/talk">
+             <input type="text" name="chat_word" style="width:85%; display:inline-block; align-items:center; padding: 0px;" />
+             <input type="submit" value="送信" onclick="console.log('debug')" style="width:15%;display:inline-block;float:right; padding:0px;" />
+            </form>
+         </div>
+       </div>
+      <script type="text/javascript">
+       // hyouji1()はUI上のバツを押すと最小化し、アイコンをタップすると表示されるもの
+       document.getElementById("display-mode").style.display="none";
+       function hyouji1(num){
+         if (num == 0){
+           document.getElementById("Hidden-mode").style.display="none";
+           document.getElementById("display-mode").style.display="block";
+         }
+         else{
+           document.getElementById("Hidden-mode").style.display="block";
+           document.getElementById("display-mode").style.display="none";
+         }
+       }
+
+       </script>
+  </body>
+</html>
