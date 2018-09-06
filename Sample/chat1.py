@@ -1,4 +1,5 @@
 # coding:utf-8
+import json
 import csv
 import os
 from datetime import datetime
@@ -7,26 +8,11 @@ from bottle import route, run, template, request, response, redirect, static_fil
 
 @route("/")
 def sample():
-    print("HELLO WORLD")
+    # print("HELLO WORLD")
     return redirect("/chat_room")
 # # @route("/static/<filepath:re:.*\.css>")
 # # def css(filepath):
 # #     return static_file(filepath, root="static")
-#
-#
-# # @route("/enter", method=["POST"])
-# # def enter():
-# #     """
-# #     入室処理を行います。
-# #     フォームの情報をcookieに格納し、チャット時の名前として使用します。
-# #     :return:
-# #     """
-# #     # POSTデータの確認
-# #     username = request.POST.get("username")
-# #     print("POST username is ", username)
-# #     # cookieへの格納
-# #     response.set_cookie("username", username)
-# #     return redirect("/chat_room")
 
 
 @route("/chat_room")
@@ -69,11 +55,19 @@ def get_talk():
     #     print("Lack of data maybe")
     return talk_list
 
+@route('/static/<file_path:path>')
+def static(file_path):
+    """
+    静的ファイル専用のルーティング
+    /static/* は静的ファイルが存在するものとして動く
+    :param file_path:
+    :return:
+    """
+    return static_file(file_path, root="./static")
 
 
 @route("/talk", method="POST")
 def talk():
-
     """
     発言を登録し、チャットルームへリダイレクトします
     :return:
@@ -113,6 +107,59 @@ def greet():
     else:
         return greet_list[4]
 
+@route("/api/talk", method=["GET", "POST"])
+def talk_api():
+    """
+    発言一覧を管理するAPI
+     GET -> 発言一覧を戻す
+    POST -> 発言を保存する
+     json eg.
+     [
+        {
+            talk_time:2016-09-17 15:00:49.937402
+            username:sayamada
+            content:おはよう
+        }
+    :
+        },
+        {
+            talk_time:2016-09-17 15:58:03.200027
+            username:sayamada
+            content:こんにちは
+        },
+        {
+            talk_time:2016-09-17 15:58:12.289631
+            username:sayamada
+            content:元気ですか？
+        }
+     ]
+     :return:
+    """
+    if request.method == "GET":
+        talk_list = get_talk()
+        return json.dumps(talk_list)
+    elif request.method == "POST":
+        # マルチバイトデータのためgetではなくgetunicodeにする
+        content = request.forms.getunicode("chat_word")
+        # 発言者をcookieから取得
+        username = "user"
+        # 発言時間取得
+        talk_time = datetime.now()
+        # 発言保存
+        greeting_list = ["おはよう","こんにちは","こんにちわ","Hi","hi","こんばんは","こんばんわ"]
+
+        if content in greeting_list:
+            greeting = greet()
+            new_data =  greeting
+        elif content == "削除":
+            new_data = "やめてくりー"
+        else:
+            new_data = "その言葉はまだわかんないんだ！ ごめんねm(__)m"
+        save_talk(talk_time, username, content, new_data)
+        return json.dumps({
+         "status": "success"
+        })
+
 def save_talk(talk_time, username, content, new_data):
     """
     チャットデータを永続化する関数
@@ -123,7 +170,7 @@ def save_talk(talk_time, username, content, new_data):
     :param content:
     :return:
     """
-    print("why save_talk!")
+    # print("why save_talk!")
 
     with open('./chat_history.csv', 'a') as f:
         writer = csv.writer(f, lineterminator='\n')
