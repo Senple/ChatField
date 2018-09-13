@@ -9,11 +9,6 @@ from bottle import route, run, template, request, response, redirect, static_fil
 def index():
     return template("index")
 
-# @route("/static/<filepath:re:.*\.css>")
-# def css(filepath):
-#     return static_file(filepath, root="static")
-
-
 @route("/enter", method=["POST"])
 def enter():
     """
@@ -53,9 +48,9 @@ def get_talk():
     talk_list = []
     # 履歴ファイルがない場合は空ファイルを作成する
     if not os.path.exists("./chat_data.csv"):
-        open("./chat_data.csv", "w").close()
+        open("./chat_data.csv", "w",encoding="utf-8").close()
 
-    with open('./chat_data.csv', 'r') as f:
+    with open('./chat_data.csv', 'r', encoding="utf-8") as f:
         reader = csv.reader(f)
         for row in reader:
             talk_list.append({
@@ -63,10 +58,10 @@ def get_talk():
                 "username": row[1],
                 "chat_data": row[2],
                 })
-    if talk_list[-1]["chat_data"] == "Hi":
-        print("OK")
-    elif talk_list[-1]["chat_data"] == "おはよう":
-        print("NOOOOO")
+    # if talk_list[-1]["chat_data"] == "Hi":
+    #     print("OK")
+    # elif talk_list[-1]["chat_data"] == "おはよう":
+    #     print("NOOOOO")
     return talk_list
 
 
@@ -125,7 +120,7 @@ def save_talk(talk_time, username, chat_data, new_data):
     :return:
     """
 
-    with open('./chat_data.csv', 'a') as f:
+    with open('./chat_data.csv', 'a',encoding="utf-8") as f:
         writer = csv.writer(f, lineterminator='\n')
         writer.writerow([talk_time, username, chat_data])
         if new_data != "null":
